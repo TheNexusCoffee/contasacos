@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Sacos de Café - Estiba Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --coffee-dark: #3C2E26;
+            --coffee-medium: #8B4513;
+            --coffee-light: #D2B48C;
+            --coffee-cream: #F5F5DC;
+            --accent-gold: #DAA520;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--coffee-cream) 0%, #E6D3B7 100%);
+            min-height: 100vh;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .coffee-gradient {
+            background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-medium) 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .photo-upload-area {
+            border: 3px dashed var(--coffee-medium);
+            transition: all 0.3s ease;
+        }
+        
+        .photo-upload-area:hover {
+            border-color: var(--accent-gold);
+            background: rgba(218, 165, 32, 0.1);
+        }
+        
+        .photo-upload-area.dragover {
+            border-color: var(--accent-gold);
+            background: rgba(218, 165, 32, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--coffee-medium) 0%, var(--coffee-dark) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 220, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .coffee-type-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .coffee-type-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .coffee-bean {
+            width: 20px;
+            height: 20px;
+            background: var(--coffee-dark);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        .coffee-bean::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: var(--coffee-light);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.3;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, var(--coffee-medium) 0%, var(--accent-gold) 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .subtotal-row {
+            background: rgba(218, 165, 32, 0.1);
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            font-weight: 600;
+        }
+        
+        .grand-total-row {
+            background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-medium) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ContaSacos">
+    <link rel="apple-touch-icon" href="icon_512.jpg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Background decoration -->
+    <div class="fixed inset-0 opacity-10 pointer-events-none">
+        <div class="coffee-bean floating-animation" style="top: 10%; left: 10%;"></div>
+        <div class="coffee-bean floating-animation" style="top: 20%; right: 15%; animation-delay: 1s;"></div>
+        <div class="coffee-bean floating-animation" style="top: 60%; left: 5%; animation-delay: 2s;"></div>
+        <div class="coffee-bean floating-animation" style="bottom: 30%; right: 10%; animation-delay: 3s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="coffee-gradient text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="title-font text-4xl md:text-5xl font-bold mb-2">
+                <i class="fas fa-coffee mr-3"></i>
+                Contador de Sacos de Café
+            </h1>
+            <p class="text-lg opacity-90">Estiba Inteligente - Clasificación por Tipos y Pesos</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Instructions Section -->
+        <section class="mb-8 text-center">
+            <div class="glass-effect rounded-2xl p-6 max-w-4xl mx-auto">
+                <h2 class="title-font text-2xl font-semibold text-coffee-dark mb-4">
+                    <i class="fas fa-camera mr-2"></i>
+                    Instrucciones de Uso
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6 text-left">
+                    <div class="bg-white bg-opacity-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-coffee-dark mb-2">
+                            <i class="fas fa-angle-right mr-2 text-accent-gold"></i>
+                            Paso 1: Fotos y Conteo
+                        </h3>
+                        <p class="text-sm text-gray-700">Tome fotos de frente y lado de la estiba, luego calcule el total de sacos.</p>
+                    </div>
+                    <div class="bg-white bg-opacity-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-coffee-dark mb-2">
+                            <i class="fas fa-angle-right mr-2 text-accent-gold"></i>
+                            Paso 2: Clasificación
+                        </h3>
+                        <p class="text-sm text-gray-700">Clasifique los sacos por tipo de café y asigne pesos personalizados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Upload Section -->
+        <section class="mb-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Front Photo Upload -->
+                    <div class="photo-upload-area rounded-2xl p-8 text-center bg-white bg-opacity-30" id="front-upload-area">
+                        <div class="mb-4">
+                            <i class="fas fa-camera text-6xl text-coffee-medium mb-4"></i>
+                            <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">Foto Frontal</h3>
+                            <p class="text-gray-600 text-sm">Vista de frente de la estiba</p>
+                        </div>
+                        <input type="file" id="front-photo" accept="image/*" class="hidden">
+                        <button onclick="document.getElementById('front-photo').click()" class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-upload mr-2"></i>
+                            Seleccionar Foto
+                        </button>
+                        <div id="front-preview" class="mt-4 hidden">
+                            <img id="front-image" class="max-w-full h-48 object-cover rounded-lg mx-auto border-2 border-coffee-light">
+                            <button onclick="removePhoto('front')" class="mt-2 text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash mr-1"></i>Eliminar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Side Photo Upload -->
+                    <div class="photo-upload-area rounded-2xl p-8 text-center bg-white bg-opacity-30" id="side-upload-area">
+                        <div class="mb-4">
+                            <i class="fas fa-camera text-6xl text-coffee-medium mb-4"></i>
+                            <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">Foto Lateral</h3>
+                            <p class="text-gray-600 text-sm">Vista de lado de la estiba</p>
+                        </div>
+                        <input type="file" id="side-photo" accept="image/*" class="hidden">
+                        <button onclick="document.getElementById('side-photo').click()" class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-upload mr-2"></i>
+                            Seleccionar Foto
+                        </button>
+                        <div id="side-preview" class="mt-4 hidden">
+                            <img id="side-image" class="max-w-full h-48 object-cover rounded-lg mx-auto border-2 border-coffee-light">
+                            <button onclick="removePhoto('side')" class="mt-2 text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash mr-1"></i>Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculate Button -->
+        <section class="text-center mb-8">
+            <button id="calculate-btn" class="btn-primary text-white px-12 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fas fa-calculator mr-2"></i>
+                Calcular Total de Sacos
+            </button>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loading-section" class="hidden text-center mb-8">
+            <div class="glass-effect rounded-2xl p-8 max-w-md mx-auto">
+                <div class="pulse-animation">
+                    <i class="fas fa-spinner fa-spin text-4xl text-coffee-medium mb-4"></i>
+                    <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">Procesando imágenes...</h3>
+                    <p class="text-gray-600">Analizando los sacos en las fotos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coffee Classification Section -->
+        <section id="classification-section" class="hidden mb-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="result-card rounded-2xl p-8">
+                    <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6 text-center">
+                        <i class="fas fa-list-alt mr-2"></i>
+                        Clasificación por Tipos de Café
+                    </h2>
+                    
+                    <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>Total de sacos detectados: <span id="total-sacks-detected">0</span></strong><br>
+                            Por favor, clasifique los sacos según el tipo de café y asigne los pesos correspondientes.
+                        </p>
+                    </div>
+
+                    <!-- Coffee Types Form -->
+                    <form id="coffee-classification-form">
+                        <!-- PRIMERAS CALIDADES -->
+                        <div class="mb-8">
+                            <div class="category-header">
+                                <i class="fas fa-star mr-2"></i>
+                                PRIMERAS CALIDADES
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        PERGAMINO HÚMEDO
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="pergamino-humedo-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="pergamino-humedo-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        PERGAMINO SECO
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="pergamino-seco-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="pergamino-seco-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        ORO LAVADO
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="oro-lavado-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="oro-lavado-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="subtotal-row">
+                                <div class="flex justify-between items-center">
+                                    <span><i class="fas fa-calculator mr-2"></i>SUB-TOTAL PRIMERAS CALIDADES:</span>
+                                    <span id="subtotal-primeras-sacks">0 sacos</span>
+                                    <span id="subtotal-primeras-weight">0 kg</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEGUNDAS CALIDADES -->
+                        <div class="mb-8">
+                            <div class="category-header">
+                                <i class="fas fa-medal mr-2"></i>
+                                SEGUNDAS CALIDADES
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        CAFÉ ORO CORRIENTE
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="oro-corriente-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="oro-corriente-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        GUACUCO
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="guacuco-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="guacuco-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        CORRIENTE
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="corriente-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="corriente-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="subtotal-row">
+                                <div class="flex justify-between items-center">
+                                    <span><i class="fas fa-calculator mr-2"></i>SUB-TOTAL SEGUNDAS CALIDADES:</span>
+                                    <span id="subtotal-segundas-sacks">0 sacos</span>
+                                    <span id="subtotal-segundas-weight">0 kg</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- INFERIORES -->
+                        <div class="mb-8">
+                            <div class="category-header">
+                                <i class="fas fa-layer-group mr-2"></i>
+                                INFERIORES
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        STOCK LOT
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="stock-lot-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="stock-lot-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        RESACAS
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="resacas-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="resacas-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                                
+                                <div class="coffee-type-card rounded-lg p-4">
+                                    <label class="block text-sm font-medium text-coffee-dark mb-2">
+                                        CAFÉ INFERIORES
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="inferiores-sacks" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Sacos" min="0" value="0">
+                                        <input type="number" id="inferiores-weight" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-medium" placeholder="Peso kg" min="0" step="0.1" value="60">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="subtotal-row">
+                                <div class="flex justify-between items-center">
+                                    <span><i class="fas fa-calculator mr-2"></i>SUB-TOTAL INFERIORES:</span>
+                                    <span id="subtotal-inferiores-sacks">0 sacos</span>
+                                    <span id="subtotal-inferiores-weight">0 kg</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GRAN TOTAL -->
+                        <div class="grand-total-row">
+                            <div class="flex justify-between items-center">
+                                <span><i class="fas fa-trophy mr-2"></i>GRAN TOTAL:</span>
+                                <div class="text-right">
+                                    <div id="grand-total-sacks">0 sacos</div>
+                                    <div id="grand-total-weight">0 kg</div>
+                                    <div id="grand-total-qqs" class="text-yellow-300">0 qq (46kg cada uno)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-8 space-x-4">
+                        <button onclick="resetApp()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                            <i class="fas fa-redo mr-2"></i>
+                            Nuevo Cálculo
+                        </button>
+                        <button onclick="downloadDetailedReport()" class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                            <i class="fas fa-download mr-2"></i>
+                            Descargar Reporte Detallado
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Summary Section -->
+        <section id="results-summary-section" class="hidden mb-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="result-card rounded-xl p-6">
+                    <h3 class="title-font text-xl font-semibold text-coffee-dark mb-4">
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        Resumen del Análisis
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-coffee-dark mb-2">Distribución por Categorías:</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span>Primeras Calidades:</span>
+                                    <span id="primeras-percentage">0%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Segundas Calidades:</span>
+                                    <span id="segundas-percentage">0%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Inferiores:</span>
+                                    <span id="inferiores-percentage">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-coffee-dark mb-2">Equivalente en Quintales:</h4>
+                            <div class="text-2xl font-bold text-accent-gold" id="total-qqs-display">0 qq</div>
+                            <p class="text-sm text-gray-600">Basado en sacos de 46kg cada uno</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="coffee-gradient text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="opacity-90">
+                <i class="fas fa-coffee mr-2"></i>
+                Contador de Sacos de Café - Tecnología de Visión Artificial con Clasificación Avanzada
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

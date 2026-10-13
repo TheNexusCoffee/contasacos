@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda - Contador de Sacos de Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --coffee-dark: #3C2E26;
+            --coffee-medium: #8B4513;
+            --coffee-light: #D2B48C;
+            --coffee-cream: #F5F5DC;
+            --accent-gold: #DAA520;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--coffee-cream) 0%, #E6D3B7 100%);
+            min-height: 100vh;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .coffee-gradient {
+            background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-medium) 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 220, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.2);
+        }
+        
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .coffee-bean {
+            width: 20px;
+            height: 20px;
+            background: var(--coffee-dark);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        .coffee-bean::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: var(--coffee-light);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.3;
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 100%);
+            border-left: 4px solid var(--accent-gold);
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #FFE4E1 0%, #FFB6C1 100%);
+            border-left: 4px solid #DC143C;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #F0FFF0 0%, #98FB98 100%);
+            border-left: 4px solid #228B22;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Background decoration -->
+    <div class="fixed inset-0 opacity-10 pointer-events-none">
+        <div class="coffee-bean floating-animation" style="top: 15%; left: 8%;"></div>
+        <div class="coffee-bean floating-animation" style="top: 25%; right: 12%; animation-delay: 1s;"></div>
+        <div class="coffee-bean floating-animation" style="top: 65%; left: 3%; animation-delay: 2s;"></div>
+        <div class="coffee-bean floating-animation" style="bottom: 25%; right: 8%; animation-delay: 3s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="coffee-gradient text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="title-font text-4xl md:text-5xl font-bold mb-2">
+                <i class="fas fa-question-circle mr-3"></i>
+                Centro de Ayuda
+            </h1>
+            <p class="text-lg opacity-90">Guía completa de uso - Contador de Sacos de Café</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="mb-8 text-center">
+            <a href="index.html" class="inline-flex items-center bg-white bg-opacity-80 hover:bg-opacity-100 text-coffee-dark px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Volver a la Aplicación
+            </a>
+        </nav>
+
+        <!-- Quick Start Section -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6 text-center">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Inicio Rápido
+                </h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="step-card rounded-xl p-6 text-center">
+                        <div class="text-4xl text-coffee-medium mb-4">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">1. Tomar Fotos</h3>
+                        <p class="text-gray-600 text-sm">Capture dos fotos claras de la estiba: vista frontal y lateral</p>
+                    </div>
+                    <div class="step-card rounded-xl p-6 text-center">
+                        <div class="text-4xl text-coffee-medium mb-4">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">2. Cargar Imágenes</h3>
+                        <p class="text-gray-600 text-sm">Suba las fotos usando el área de carga o arrastrando los archivos</p>
+                    </div>
+                    <div class="step-card rounded-xl p-6 text-center">
+                        <div class="text-4xl text-coffee-medium mb-4">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3 class="title-font text-xl font-semibold text-coffee-dark mb-2">3. Obtener Resultados</h3>
+                        <p class="text-gray-600 text-sm">El sistema analizará las imágenes y calculará el total de sacos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Instructions -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6">
+                    <i class="fas fa-book-open mr-2"></i>
+                    Instrucciones Detalladas
+                </h2>
+                
+                <!-- Photo Guidelines -->
+                <div class="mb-8">
+                    <h3 class="title-font text-2xl font-semibold text-coffee-dark mb-4">
+                        <i class="fas fa-camera mr-2 text-accent-gold"></i>
+                        Guía de Fotografía
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="tip-box rounded-lg p-6">
+                            <h4 class="font-semibold text-coffee-dark mb-3">
+                                <i class="fas fa-check-circle mr-2 text-green-600"></i>
+                                Foto Frontal - Mejores Prácticas
+                            </h4>
+                            <ul class="text-sm text-gray-700 space-y-2">
+                                <li>• <strong>Posición:</strong> Frente directo a la estiba</li>
+                                <li>• <strong>Distancia:</strong> 3-5 metros para capturar toda la estiba</li>
+                                <li>• <strong>Ángulo:</strong> Cámara a la altura del centro de la estiba</li>
+                                <li>• <strong>Iluminación:</strong> Luz natural uniforme, evitar sombras</li>
+                                <li>• <strong>Enfoque:</strong> Todos los sacos deben estar nítidos</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tip-box rounded-lg p-6">
+                            <h4 class="font-semibold text-coffee-dark mb-3">
+                                <i class="fas fa-check-circle mr-2 text-green-600"></i>
+                                Foto Lateral - Mejores Prácticas
+                            </h4>
+                            <ul class="text-sm text-gray-700 space-y-2">
+                                <li>• <strong>Posición:</strong> Lado de la estiba, perpendicular al frente</li>
+                                <li>• <strong>Distancia:</strong> 3-4 metros mostrando profundidad</li>
+                                <li>• <strong>Ángulo:</strong> Mostrar claramente las capas laterales</li>
+                                <li>• <strong>Iluminación:</strong> Luz lateral suave, sin reflejos</li>
+                                <li>• <strong>Composición:</strong> Incluir desde la base hasta la cima</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Common Mistakes -->
+                <div class="mb-8">
+                    <h3 class="title-font text-2xl font-semibold text-coffee-dark mb-4">
+                        <i class="fas fa-exclamation-triangle mr-2 text-red-600"></i>
+                        Errores Comunes a Evitar
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="warning-box rounded-lg p-6">
+                            <h4 class="font-semibold text-coffee-dark mb-3">Fotos Problemáticas</h4>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• <strong>Ángulo muy inclinado:</strong> Distorsiona la proporción</li>
+                                <li>• <strong>Sombra sobre los sacos:</strong> Dificulta la detección</li>
+                                <li>• <strong>Foto borrosa o movida:</strong> Reduce la precisión</li>
+                                <li>• <strong>Parte de la estiba cortada:</strong> Cálculo incompleto</li>
+                                <li>• <strong>Fondo confuso:</strong> Interfiere con el análisis</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="success-box rounded-lg p-6">
+                            <h4 class="font-semibold text-coffee-dark mb-3">Condiciones Ideales</h4>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• <strong>Luz natural difusa:</strong> Mejor visibilidad</li>
+                                <li>• <strong>Fondo uniforme:</strong> Contraste claro</li>
+                                <li>• <strong>Estiba completa visible:</strong> Conteo preciso</li>
+                                <li>• <strong>Resolución mínima 800x600:</strong> Detalles nítidos</li>
+                                <li>• <strong>Sacos similares:</strong> Patrón consistente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Information -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6">
+                    <i class="fas fa-cogs mr-2"></i>
+                    Información Técnica
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="title-font text-xl font-semibold text-coffee-dark mb-4">
+                            <i class="fas fa-brain mr-2 text-accent-gold"></i>
+                            Tecnología de Análisis
+                        </h3>
+                        <div class="space-y-3 text-sm text-gray-700">
+                            <p><strong>Algoritmo:</strong> Visión por computadora avanzada</p>
+                            <p><strong>Detección:</strong> Reconocimiento de patrones y formas</p>
+                            <p><strong>Análisis:</strong> Procesamiento de imágenes en tiempo real</p>
+                            <p><strong>Estimación:</strong> Cálculo basado en proporciones y patrones</p>
+                            <p><strong>Confianza:</strong> Porcentaje de precisión del análisis</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="title-font text-xl font-semibold text-coffee-dark mb-4">
+                            <i class="fas fa-chart-line mr-2 text-accent-gold"></i>
+                            Interpretación de Resultados
+                        </h3>
+                        <div class="space-y-3 text-sm text-gray-700">
+                            <p><strong>Sacos Frontales:</strong> Contados en la foto principal</p>
+                            <p><strong>Sacos Laterales:</strong> Contados en la vista de perfil</p>
+                            <p><strong>Sacos Traseros:</strong> Estimados basados en patrones</p>
+                            <p><strong>Total:</strong> Suma de todos los sacos calculados</p>
+                            <p><strong>Confianza:</strong> Indica la fiabilidad del resultado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6">
+                    <i class="fas fa-tools mr-2"></i>
+                    Solución de Problemas
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-3">
+                            <i class="fas fa-exclamation-circle mr-2 text-yellow-600"></i>
+                            Los resultados no son precisos
+                        </h3>
+                        <ul class="text-sm text-gray-700 space-y-1 ml-6">
+                            <li>• Verifique la calidad y resolución de las fotos</li>
+                            <li>• Asegúrese de que toda la estiba esté visible</li>
+                            <li>• Mejore las condiciones de iluminación</li>
+                            <li>• Tome las fotos desde ángulos rectos</li>
+                            <li>• Evite sombras y reflejos en los sacos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-3">
+                            <i class="fas fa-upload mr-2 text-blue-600"></i>
+                            No puedo cargar las fotos
+                        </h3>
+                        <ul class="text-sm text-gray-700 space-y-1 ml-6">
+                            <li>• Verifique que los archivos sean imágenes válidas (JPG, PNG)</li>
+                            <li>• Asegúrese de que los archivos no estén dañados</li>
+                            <li>• Compruebe el tamaño del archivo (máx. 10MB recomendado)</li>
+                            <li>• Actualice su navegador a la versión más reciente</li>
+                            <li>• Intente usar un navegador diferente</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-3">
+                            <i class="fas fa-spinner mr-2 text-purple-600"></i>
+                            El análisis tarda demasiado
+                        </h3>
+                        <ul class="text-sm text-gray-700 space-y-1 ml-6">
+                            <li>• Reduzca la resolución de las imágenes</li>
+                            <li>• Cierre otras pestañas del navegador</li>
+                            <li>• Verifique su conexión a internet</li>
+                            <li>• Reinicie el navegador y vuelva a intentar</li>
+                            <li>• Use un dispositivo con mejor procesamiento</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6">
+                    <i class="fas fa-question-circle mr-2"></i>
+                    Preguntas Frecuentes
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-2">¿Qué tan preciso es el conteo?</h3>
+                        <p class="text-sm text-gray-700">La precisión depende de la calidad de las fotos y las condiciones de iluminación. Con imágenes óptimas, el sistema puede alcanzar una precisión del 85-95%. Siempre recomendamos verificar los resultados manualmente para aplicaciones críticas.</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-2">¿Puedo usar fotos tomadas con mi celular?</h3>
+                        <p class="text-sm text-gray-700">Sí, siempre que tengan una resolución mínima de 800x600 píxeles y buena calidad. Las cámaras modernas de smartphones son generalmente adecuadas para el análisis.</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-2">¿Funciona con diferentes tipos de sacos?</h3>
+                        <p class="text-sm text-gray-700">El sistema está optimizado para sacos de café estándar de 60kg, pero puede funcionar con otros tipos de sacos similares. La precisión puede variar dependiendo del tamaño y color de los sacos.</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-2">¿Puedo guardar los resultados?</h3>
+                        <p class="text-sm text-gray-700">Sí, la aplicación permite descargar un reporte en formato de texto y exportar los datos en CSV para análisis posteriores. Los resultados también se guardan temporalmente en el navegador.</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <h3 class="font-semibold text-coffee-dark mb-2">¿Necesito conexión a internet?</h3>
+                        <p class="text-sm text-gray-700">No, el procesamiento se realiza completamente en su dispositivo usando tecnología web moderna. Una vez cargada la aplicación, puede usarla sin conexión a internet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Information -->
+        <section class="mb-12">
+            <div class="glass-effect rounded-2xl p-8 text-center">
+                <h2 class="title-font text-3xl font-bold text-coffee-dark mb-6">
+                    <i class="fas fa-headset mr-2"></i>
+                    ¿Necesita Más Ayuda?
+                </h2>
+                <p class="text-gray-700 mb-6">Si tiene preguntas adicionales o necesita asistencia técnica, no dude en contactarnos:</p>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="step-card rounded-lg p-6">
+                        <div class="text-3xl text-coffee-medium mb-3">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="font-semibold text-coffee-dark mb-2">Soporte por Email</h3>
+                        <p class="text-sm text-gray-600">soporte@coffeecounter.com</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <div class="text-3xl text-coffee-medium mb-3">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3 class="font-semibold text-coffee-dark mb-2">Línea de Ayuda</h3>
+                        <p class="text-sm text-gray-600">+1 (555) 123-4567</p>
+                    </div>
+                    
+                    <div class="step-card rounded-lg p-6">
+                        <div class="text-3xl text-coffee-medium mb-3">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3 class="font-semibold text-coffee-dark mb-2">Chat en Vivo</h3>
+                        <p class="text-sm text-gray-600">Disponible 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="coffee-gradient text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="opacity-90">
+                <i class="fas fa-coffee mr-2"></i>
+                Contador de Sacos de Café - Centro de Ayuda y Soporte
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Animaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar elementos
+            anime({
+                targets: '.step-card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad'
+            });
+            
+            // Animar decoraciones
+            anime({
+                targets: '.coffee-bean',
+                scale: [0, 1],
+                opacity: [0, 0.1],
+                duration: 1000,
+                delay: anime.stagger(200),
+                easing: 'easeOutElastic(1, .8)'
+            });
+        });
+    </script>
+</body>
+</html>
